@@ -41,6 +41,37 @@ legal_moves = []
 
 
                 
+#check variables
+
+
+#board color
+
+light_brown = (240,219,182)
+dark_brown = (55,26,8)
+
+
+#drawing the main board
+
+def draw_board():
+    for i in range(32):  #32 because we will use the background fill color for the black squares of the board
+        column= i % 4
+        row= i // 4
+        if row % 2 == 0:
+            pygame.draw.rect(screen,light_brown,[600 - (column * 200), row* 100, 100, 100])
+        else:
+            pygame.draw.rect(screen,light_brown,[700 - (column * 200), row* 100, 100, 100])
+
+
+
+
+
+
+    #hassan I'm thinking about making a seperate texture for the board in the wooden style so this is just a placeholder
+
+
+
+
+
 
 #gameloop
 
@@ -50,7 +81,8 @@ while run == True:
 
 
     timer.tick(fps)
-    screen.fill('black')
+    screen.fill(dark_brown)
+    draw_board()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
