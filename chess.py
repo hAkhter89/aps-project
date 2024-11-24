@@ -3,7 +3,7 @@ import auxilfuncs
 
 pygame.init()
 
-screen_width=900
+screen_width=800
 screen_height=800
 
 screen = pygame.display.set_mode([screen_width,screen_height])
@@ -19,11 +19,12 @@ white_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook'
                 'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn']
 black_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook',
                 'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn']
-white_coords = [(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),
+black_coords = [(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),
                 (0,1),(1,1),(2,1),(3,1),(4,1),(5,1),(6,1),(7,1)]
 
-black_coords = [(0,7),(1,7),(2,7),(3,7),(4,7),(5,7),(6,7),(7,7),
+white_coords = [(0,7),(1,7),(2,7),(3,7),(4,7),(5,7),(6,7),(7,7),
                 (0,6),(1,6),(2,6),(3,6),(4,6),(5,6),(6,6),(7,6)]
+
 
 
 capture_white = []
@@ -89,24 +90,25 @@ def draw_board():
         column= i % 4
         row= i // 4
         if row % 2 == 0:
-            pygame.draw.rect(screen,light_brown,[600 - (column * 200), row* 100, 100, 100])
+            pygame.draw.rect(screen,dark_brown,[600 - (column * 200), row* 100, 100, 100])
         else:
-            pygame.draw.rect(screen,light_brown,[700 - (column * 200), row* 100, 100, 100])
+            pygame.draw.rect(screen,dark_brown,[700 - (column * 200), row* 100, 100, 100])
 
 def draw_pieces():
-    for i in range(len(white_pieces)):
-        imgindex = piece_list.index(white_pieces[i])
-        if white_pieces[i] == 'pawn':
-            screen.blit(wp, (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 18))
-        else:
-            screen.blit(white_imgs[imgindex], (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 10))
-    
     for i in range(len(black_pieces)):
         imgindex = piece_list.index(black_pieces[i])
         if black_pieces[i] == 'pawn':
             screen.blit(bp, (black_coords[i][0] * 100 + 8, black_coords[i][1] * 100 + 18))
         else:
-            screen.blit(black_imgs[imgindex], (black_coords[i][0] * 100 + 8, black_coords[i][1] * 100 + 10))
+            screen.blit(black_imgs[imgindex], (black_coords[i][0] * 100 + 8, black_coords[i][1] * 100 + 18))
+            
+    for i in range(len(white_pieces)):
+        imgindex = piece_list.index(white_pieces[i])
+        if white_pieces[i] == 'pawn':
+            screen.blit(wp, (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 18))
+        else:
+            screen.blit(white_imgs[imgindex], (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 18))    
+    
             
         
         
@@ -117,7 +119,7 @@ def draw_pieces():
 
 
     #hassan I'm thinking about making a seperate texture for the board in the wooden style so this is just a placeholder
-
+    # I've removed the discard pile tab, we dont need it. - Hassan
 
 
 
@@ -131,7 +133,7 @@ while run == True:
 
 
     timer.tick(fps)
-    screen.fill(dark_brown)
+    screen.fill(light_brown)
     draw_board()
     draw_pieces()
 
