@@ -52,9 +52,9 @@ wb = pygame.transform.scale(pygame.image.load('alpha/wB.png'), (80,80))
 wn = pygame.transform.scale(pygame.image.load('alpha/wN.png'), (80,80))
 wp = pygame.transform.scale(pygame.image.load('alpha/wP.png'), (80,80))
 
-white_imgs = [auxilfuncs.wp, auxilfuncs.wq, auxilfuncs.wk, auxilfuncs.wn, auxilfuncs.wb, auxilfuncs.wr]
+white_imgs = [wp, wq, wk, wn, wb, wr]
 
-black_imgs = [auxilfuncs.bp, auxilfuncs.bq, auxilfuncs.bk, auxilfuncs.bn, auxilfuncs.bb, auxilfuncs.br]
+black_imgs = [bp, bq, bk, bn, bb, br]
 
 piece_list = ['pawn', 'queen', 'king', 'knight', 'bishop', 'rook']
 
