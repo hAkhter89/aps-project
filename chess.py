@@ -1,19 +1,17 @@
 import pygame
-import auxilfuncs
 
 pygame.init()
-
-screen_width=1000
-screen_height=900
+screen_width=800
+screen_height=800
 
 screen = pygame.display.set_mode([screen_width,screen_height])
-pygame.display.set_caption('Two Player Pygame Chess')
+pygame.display.set_caption('Chess.py')
 font = pygame.font.Font('freesansbold.ttf', 20) 
 big_font = pygame.font.Font('freesansbold.ttf', 50)
 timer = pygame.time.Clock()
 fps = 60
 
-#textures and gameloop eeeee
+#textures and gameloop
 
 white_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook',
                 'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn']
@@ -36,7 +34,7 @@ capture_black = []
 turn_step = 0
 selected = 100
 
-valid_moves = []
+legal_moves = []
 
 #textures and assets
 bq = pygame.transform.scale(pygame.image.load('alpha/bQ.png'), (80,80))
@@ -44,13 +42,13 @@ bk = pygame.transform.scale(pygame.image.load('alpha/bK.png'), (80,80))
 br = pygame.transform.scale(pygame.image.load('alpha/bR.png'), (80,80))
 bb = pygame.transform.scale(pygame.image.load('alpha/bB.png'), (80,80))
 bn = pygame.transform.scale(pygame.image.load('alpha/bN.png'), (80,80))
-bp = pygame.transform.scale(pygame.image.load('alpha/bP.png'), (80,80))
+bp = pygame.transform.scale(pygame.image.load('alpha/bP.png'), (75,75))
 wq = pygame.transform.scale(pygame.image.load('alpha/wQ.png'), (80,80))
 wk = pygame.transform.scale(pygame.image.load('alpha/wK.png'), (80,80))
 wr = pygame.transform.scale(pygame.image.load('alpha/wR.png'), (80,80))
 wb = pygame.transform.scale(pygame.image.load('alpha/wB.png'), (80,80))
 wn = pygame.transform.scale(pygame.image.load('alpha/wN.png'), (80,80))
-wp = pygame.transform.scale(pygame.image.load('alpha/wP.png'), (80,80))
+wp = pygame.transform.scale(pygame.image.load('alpha/wP.png'), (75,75))
 
 white_imgs = [wp, wq, wk, wn, wb, wr]
 
@@ -64,7 +62,7 @@ piece_list = ['pawn', 'queen', 'king', 'knight', 'bishop', 'rook']
 
 
 #board color
-
+board_png = pygame.transform.scale(pygame.image.load('alpha/chessboard.png'), (800,800))
 light_brown = (240,219,182)
 green = (111,130,56)
 
@@ -72,26 +70,20 @@ green = (111,130,56)
 #drawing the main board
 
 def draw_board():
-    for i in range(32):  #32 because we will use the background fill color for the black squares of the board
-        column= i % 4
-        row= i // 4
-        if row % 2 == 0:
-            pygame.draw.rect(screen,green,[600 - (column * 200), row* 100, 100, 100])
-        else:
-            pygame.draw.rect(screen,green,[700 - (column * 200), row* 100, 100, 100])
+    screen.blit(board_png,(0,0))
 
 def draw_pieces():
     for i in range(len(black_pieces)):
         imgindex = piece_list.index(black_pieces[i])
         if black_pieces[i] == 'pawn':
-            screen.blit(bp, (black_coords[i][0] * 100 + 8, black_coords[i][1] * 100 + 18))
+            screen.blit(bp, (black_coords[i][0] * 100 + 10, black_coords[i][1] * 100 + 20))
         else:
             screen.blit(black_imgs[imgindex], (black_coords[i][0] * 100 + 8, black_coords[i][1] * 100 + 18))
             
     for i in range(len(white_pieces)):
         imgindex = piece_list.index(white_pieces[i])
         if white_pieces[i] == 'pawn':
-            screen.blit(wp, (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 18))
+            screen.blit(wp, (white_coords[i][0] * 100 + 10, white_coords[i][1] * 100 + 20))
         else:
             screen.blit(white_imgs[imgindex], (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 18))    
     
@@ -100,7 +92,7 @@ def draw_pieces():
 def check_options(pieces, locations, turn):
     moves_list = []
     all_moves_list = []
-    for i in range(len(pieces)):
+    for i in range((len(pieces))):
         location = locations[i]
         piece = pieces[i]
         if piece == 'pawn':
@@ -116,39 +108,32 @@ def check_options(pieces, locations, turn):
         # elif piece == 'king':
         #     moves_list = check_king(location, turn)
         all_moves_list.append(moves_list)
+    return all_moves_list
 
-    return all_moves_list 
-
-
-
-
-
-    #hassan I'm thinking about making a seperate texture for the board in the wooden style so this is just a placeholder
-    # I've removed the discard pile tab, we dont need it. - Hassan
-
-#check valid pon moves
 def check_pawn(position, color):
     moves_list = []
     if color == 'white':
-        if (position [0], position[1] + 1) not in white_coords and (position [0], position[1] + 1) not in black_coords and position[1] < 7:
-            moves_list.append((position[0], position[1] + 1))
-        if (position [0], position[1] + 2) not in white_coords and (position [0], position[1] + 2) not in black_coords and position[1] == 1:
-            moves_list.append((position[0], position[1] + 2))
-        if (position[0] + 1, position [1] + 1) in black_coords:
-            moves_list.append((position[0] + 1, position [1] + 1))
-        if (position[0] - 1, position [1] + 1) in black_coords:
-            moves_list.append((position[0] - 1, position [1] + 1))
-
-
-    else:
-        if (position [0], position[1] - 1) not in white_coords and (position [0], position[1] - 1) not in black_coords and position[1] > 0:
+        if (position[0], position[1] - 1) not in white_coords and \
+                (position[0], position[1] - 1) not in black_coords and position[1] > 0:
             moves_list.append((position[0], position[1] - 1))
-        if (position [0], position[1] - 2) not in white_coords and (position [0], position[1] - 2) not in black_coords and position[1] == 6:
+        if (position[0], position[1] - 2) not in white_coords and \
+                (position[0], position[1] - 2) not in black_coords and position[1] == 6:
             moves_list.append((position[0], position[1] - 2))
-        if (position[0] + 1, position [1] - 1) in white_coords:
-            moves_list.append((position[0] + 1, position [1] - 1))
-        if (position[0] - 1, position [1] + 1) in white_coords:
-            moves_list.append((position[0] - 1, position [1] - 1))
+        if (position[0] + 1, position[1] - 1) in black_coords:
+            moves_list.append((position[0] + 1, position[1] - 1))
+        if (position[0] - 1, position[1] - 1) in black_coords:
+            moves_list.append((position[0] - 1, position[1] - 1))
+    else:
+        if (position[0], position[1] + 1) not in white_coords and \
+                (position[0], position[1] + 1) not in black_coords and position[1] < 7:
+            moves_list.append((position[0], position[1] + 1))
+        if (position[0], position[1] + 2) not in white_coords and \
+                (position[0], position[1] + 2) not in black_coords and position[1] == 1:
+            moves_list.append((position[0], position[1] + 2))
+        if (position[0] + 1, position[1] + 1) in white_coords:
+            moves_list.append((position[0] + 1, position[1] + 1))
+        if (position[0] - 1, position[1] + 1) in white_coords:
+            moves_list.append((position[0] - 1, position[1] + 1))
     return moves_list
 
 
@@ -164,12 +149,13 @@ def check_valid_moves():
 
 
 #gameloop
-black_options = check_options(black_pieces, black_coords, 'black')
-white_options = check_options(white_pieces, white_coords, 'white')
+
 
 run = True
 
 while run == True:
+    black_options = check_options(black_pieces, black_coords, 'black')
+    white_options = check_options(white_pieces, white_coords, 'white')
 
 
     timer.tick(fps)
@@ -178,21 +164,24 @@ while run == True:
     draw_pieces()
     
     if selected != 100:
-        valid_moves = check_valid_moves()
-    
+        legal_moves = check_valid_moves()
+    # Events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x_coord = event.pos[0] // 100
-            y_coord = event.pos[1] // 100
+            y_coord = event.pos[1] // 100   
             click_coords = (x_coord, y_coord)
+            
             if turn_step < 2:
                 if click_coords in white_coords:
+                    print(f"Click Coordinates: {click_coords}")
                     selected = white_coords.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
-                if click_coords in valid_moves and selected != 100:
+                if click_coords in legal_moves and selected != 100:
+                    print(f"Click Coordinates: {click_coords}")
                     white_coords[selected] = click_coords
                     if click_coords in black_coords:
                         black_piece = black_coords.index(click_coords)
@@ -203,13 +192,13 @@ while run == True:
                     white_options = check_options(white_pieces, white_coords, 'white')
                     turn_step = 2
                     selected = 100
-                    valid_moves = []
+                    legal_moves = []
             if turn_step > 1:
                 if click_coords in black_coords:
                     selected = black_coords.index(click_coords)
                     if turn_step == 2:
                         turn_step = 3
-                if click_coords in valid_moves and selected != 100:
+                if click_coords in legal_moves and selected != 100:
                     black_coords[selected] = click_coords
                     if click_coords in white_coords:
                         white_piece = white_coords.index(click_coords)
@@ -220,7 +209,7 @@ while run == True:
                     white_options = check_options(white_pieces, white_coords, 'white')
                     turn_step = 0
                     selected = 100
-                    valid_moves = []
+                    legal_moves = []
                         
                 
    
