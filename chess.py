@@ -97,16 +97,16 @@ def check_options(pieces, locations, turn):
         piece = pieces[i]
         if piece == 'pawn':
             moves_list = check_pawn(location, turn)
-        # elif piece == 'rook':
-        #     moves_list = check_rook(location, turn)
-        # elif piece == 'knight':
-        #     moves_list = check_knight(location, turn)
-        # elif piece == 'bishop':
-        #     moves_list = check_bishop(location, turn)
-        # elif piece == 'queen':
-        #     moves_list = check_queen(location, turn)
-        # elif piece == 'king':
-        #     moves_list = check_king(location, turn)
+        elif piece == 'rook':
+            moves_list = check_rook(location, turn)
+        elif piece == 'knight':
+            moves_list = check_knight(location, turn)
+        elif piece == 'bishop':
+            moves_list = check_bishop(location, turn)
+        elif piece == 'queen':
+            moves_list = check_queen(location, turn)
+        elif piece == 'king':
+            moves_list = check_king(location, turn)
         all_moves_list.append(moves_list)
     return all_moves_list
 
@@ -136,8 +136,418 @@ def check_pawn(position, color):
             moves_list.append((position[0] - 1, position[1] + 1))
     return moves_list
 
+def check_rook(position, color):
+    moves_list = []
+    flag = True
+    if color == 'white':
+        # UP
+        for x in range(1, position[1] + 1):
+            if (position[0], position[1] - x) not in white_coords:
+                if (position[0], position[1] - x) in black_coords:
+                    moves_list.append((position[0], position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] - x))
+            else:
+                break
+        # DOWN
+        for x in range(1, abs(position[1] - 7) + 1):
+            if (position[0], position[1] + x) not in white_coords:
+                if (position[0], position[1] + x) in black_coords:
+                    moves_list.append((position[0], position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] + x))
+            else:
+                break
+        # LEFT
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1]) not in white_coords:
+                if (position[0] - x, position[1]) in black_coords:
+                    moves_list.append((position[0] - x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1]))
+            else:
+                break
+        # RIGHT
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1]) not in white_coords:
+                if (position[0] + x, position[1]) in black_coords:
+                    moves_list.append((position[0] + x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1]))
+            else:
+                break
+    else:
+        # UP
+        for x in range(1, abs(position[1] - 7) + 1):
+            if (position[0], position[1] + x) not in black_coords:
+                if (position[0], position[1] + x) in white_coords:
+                    moves_list.append((position[0], position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] + x))
+            else:
+                break
+        # DOWN
+        for x in range(1, position[1] + 1):
+            if (position[0], position[1] - x) not in black_coords:
+                if (position[0], position[1] - x) in white_coords:
+                    moves_list.append((position[0], position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] - x))
+            else:
+                break
+        # LEFT
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1]) not in black_coords:
+                if (position[0] + x, position[1]) in white_coords:
+                    moves_list.append((position[0] + x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1]))
+            else:
+                break
+        # RIGHT
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1]) not in black_coords:
+                if (position[0] - x, position[1]) in white_coords:
+                    moves_list.append((position[0] - x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1]))
+            else:
+                break
+    return moves_list
 
+def check_knight(position, color):
+    moves_list = []
+    if color == 'white':
+        if (position[0] + 1, position[1] - 2) not in white_coords:
+            moves_list.append((position[0] + 1, position[1] - 2))
+        if (position[0] - 1, position[1] - 2) not in white_coords:
+            moves_list.append((position[0] - 1, position[1] - 2))
+            
+        if (position[0] - 1, position[1] + 2) not in white_coords:
+            moves_list.append((position[0] - 1, position[1] + 2))
+        if (position[0] + 1, position[1] + 2) not in white_coords:
+            moves_list.append((position[0] + 1, position[1] + 2))
+            
+        if (position[0] - 2, position[1] - 1) not in white_coords:
+            moves_list.append((position[0] - 2, position[1] - 1))
+        if (position[0] - 2, position[1] + 1) not in white_coords:
+            moves_list.append((position[0] - 2, position[1] + 1))
+            
+        if (position[0] + 2, position[1] - 1) not in white_coords:
+            moves_list.append((position[0] + 2, position[1] - 1))
+        if (position[0] + 2, position[1] + 1) not in white_coords:
+            moves_list.append((position[0] + 2, position[1] + 1))
+    else:
+        if (position[0] + 1, position[1] - 2) not in black_coords:
+            moves_list.append((position[0] + 1, position[1] - 2))
+        if (position[0] - 1, position[1] - 2) not in black_coords:
+            moves_list.append((position[0] - 1, position[1] - 2))
+            
+        if (position[0] - 1, position[1] + 2) not in black_coords:
+            moves_list.append((position[0] - 1, position[1] + 2))
+        if (position[0] + 1, position[1] + 2) not in black_coords:
+            moves_list.append((position[0] + 1, position[1] + 2))
+            
+        if (position[0] - 2, position[1] - 1) not in black_coords:
+            moves_list.append((position[0] - 2, position[1] - 1))
+        if (position[0] - 2, position[1] + 1) not in black_coords:
+            moves_list.append((position[0] - 2, position[1] + 1))
+            
+        if (position[0] + 2, position[1] - 1) not in black_coords:
+            moves_list.append((position[0] + 2, position[1] - 1))
+        if (position[0] + 2, position[1] + 1) not in black_coords:
+            moves_list.append((position[0] + 2, position[1] + 1))
+        
+    
+    return moves_list
 
+def check_bishop(position, color):
+    moves_list = []
+    if color == 'white':
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1] - x) not in white_coords:
+                if (position[0] - x, position[1] - x) in black_coords:
+                    moves_list.append((position[0] - x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] - x))
+            else:
+                break
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] + x) not in white_coords:
+                if (position[0] + x, position[1] + x) in black_coords:
+                    moves_list.append((position[0] + x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] + x))
+            else:
+                break
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1] + x) not in white_coords:
+                if (position[0] - x, position[1] + x) in black_coords:
+                    moves_list.append((position[0] - x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] + x))
+            else:
+                break
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] - x) not in white_coords:
+                if (position[0] + x, position[1] - x) in black_coords:
+                    moves_list.append((position[0] + x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] - x))
+            else:
+                break
+    else:
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] + x) not in black_coords:
+                if (position[0] + x, position[1] + x) in white_coords:
+                    moves_list.append((position[0] + x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] + x))
+            else:
+                break
+        for x in range(1, position[0]  + 1):
+            if (position[0] - x, position[1] - x) not in black_coords:
+                if (position[0] - x, position[1] - x) in white_coords:
+                    moves_list.append((position[0] - x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] - x))
+            else:
+                break
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] - x) not in black_coords:
+                if (position[0] + x, position[1] - x) in white_coords:
+                    moves_list.append((position[0] + x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] - x))
+            else:
+                break
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1] + x) not in black_coords:
+                if (position[0] - x, position[1] + x) in white_coords:
+                    moves_list.append((position[0] - x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] + x))
+            else:
+                break
+    return moves_list
+
+def check_queen(position, color):
+    # ROOK + BISHOP
+    moves_list = []
+    if color == 'white':
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1] - x) not in white_coords:
+                if (position[0] - x, position[1] - x) in black_coords:
+                    moves_list.append((position[0] - x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] - x))
+            else:
+                break
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] + x) not in white_coords:
+                if (position[0] + x, position[1] + x) in black_coords:
+                    moves_list.append((position[0] + x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] + x))
+            else:
+                break
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1] + x) not in white_coords:
+                if (position[0] - x, position[1] + x) in black_coords:
+                    moves_list.append((position[0] - x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] + x))
+            else:
+                break
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] - x) not in white_coords:
+                if (position[0] + x, position[1] - x) in black_coords:
+                    moves_list.append((position[0] + x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] - x))
+            else:
+                break
+    else:
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] + x) not in black_coords:
+                if (position[0] + x, position[1] + x) in white_coords:
+                    moves_list.append((position[0] + x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] + x))
+            else:
+                break
+        for x in range(1, position[0]  + 1):
+            if (position[0] - x, position[1] - x) not in black_coords:
+                if (position[0] - x, position[1] - x) in white_coords:
+                    moves_list.append((position[0] - x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] - x))
+            else:
+                break
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1] - x) not in black_coords:
+                if (position[0] + x, position[1] - x) in white_coords:
+                    moves_list.append((position[0] + x, position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1] - x))
+            else:
+                break
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1] + x) not in black_coords:
+                if (position[0] - x, position[1] + x) in white_coords:
+                    moves_list.append((position[0] - x, position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1] + x))
+            else:
+                break
+    if color == 'white':
+        # UP
+        for x in range(1, position[1] + 1):
+            if (position[0], position[1] - x) not in white_coords:
+                if (position[0], position[1] - x) in black_coords:
+                    moves_list.append((position[0], position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] - x))
+            else:
+                break
+        # DOWN
+        for x in range(1, abs(position[1] - 7) + 1):
+            if (position[0], position[1] + x) not in white_coords:
+                if (position[0], position[1] + x) in black_coords:
+                    moves_list.append((position[0], position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] + x))
+            else:
+                break
+        # LEFT
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1]) not in white_coords:
+                if (position[0] - x, position[1]) in black_coords:
+                    moves_list.append((position[0] - x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1]))
+            else:
+                break
+        # RIGHT
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1]) not in white_coords:
+                if (position[0] + x, position[1]) in black_coords:
+                    moves_list.append((position[0] + x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1]))
+            else:
+                break
+    else:
+        # UP
+        for x in range(1, abs(position[1] - 7) + 1):
+            if (position[0], position[1] + x) not in black_coords:
+                if (position[0], position[1] + x) in white_coords:
+                    moves_list.append((position[0], position[1] + x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] + x))
+            else:
+                break
+        # DOWN
+        for x in range(1, position[1] + 1):
+            if (position[0], position[1] - x) not in black_coords:
+                if (position[0], position[1] - x) in white_coords:
+                    moves_list.append((position[0], position[1] - x))
+                    break
+                else:
+                    moves_list.append((position[0], position[1] - x))
+            else:
+                break
+        # LEFT
+        for x in range(1, abs(position[0] - 7) + 1):
+            if (position[0] + x, position[1]) not in black_coords:
+                if (position[0] + x, position[1]) in white_coords:
+                    moves_list.append((position[0] + x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] + x, position[1]))
+            else:
+                break
+        # RIGHT
+        for x in range(1, position[0] + 1):
+            if (position[0] - x, position[1]) not in black_coords:
+                if (position[0] - x, position[1]) in white_coords:
+                    moves_list.append((position[0] - x, position[1]))
+                    break
+                else:
+                    moves_list.append((position[0] - x, position[1]))
+            else:
+                break
+    return moves_list
+
+def check_king(position, color):
+    moves_list = []
+    if color == 'white':
+        if (position[0], position[1] - 1) not in white_coords:
+            moves_list.append((position[0], position[1] - 1))
+        if (position[0], position[1] + 1) not in white_coords:
+            moves_list.append((position[0], position[1] + 1))
+        if (position[0] - 1, position[1] - 1) not in white_coords:
+            moves_list.append((position[0] - 1, position[1] - 1))
+        if (position[0] + 1, position[1] - 1) not in white_coords:
+            moves_list.append((position[0] + 1, position[1] - 1))
+        if (position[0] - 1, position[1] + 1) not in white_coords:
+            moves_list.append((position[0] - 1, position[1] + 1))
+        if (position[0] + 1, position[1] + 1) not in white_coords:
+            moves_list.append((position[0] + 1, position[1] + 1))
+        if (position[0] - 1, position[1]) not in white_coords:
+            moves_list.append((position[0] - 1, position[1]))
+        if (position[0] + 1, position[1]) not in white_coords:
+            moves_list.append((position[0] + 1, position[1]))
+    else:
+        if (position[0], position[1] - 1) not in black_coords:
+            moves_list.append((position[0], position[1] - 1))
+        if (position[0], position[1] + 1) not in black_coords:
+            moves_list.append((position[0], position[1] + 1))
+        if (position[0] - 1, position[1] - 1) not in black_coords:
+            moves_list.append((position[0] - 1, position[1] - 1))
+        if (position[0] + 1, position[1] - 1) not in black_coords:
+            moves_list.append((position[0] + 1, position[1] - 1))
+        if (position[0] - 1, position[1] + 1) not in black_coords:
+            moves_list.append((position[0] - 1, position[1] + 1))
+        if (position[0] + 1, position[1] + 1) not in black_coords:
+            moves_list.append((position[0] + 1, position[1] + 1))
+        if (position[0] - 1, position[1]) not in black_coords:
+            moves_list.append((position[0] - 1, position[1]))
+        if (position[0] + 1, position[1]) not in black_coords:
+            moves_list.append((position[0] + 1, position[1]))
+    return moves_list
+
+                 
+    
 
 def check_valid_moves():
     if turn_step < 2:
@@ -176,12 +586,12 @@ while run == True:
             
             if turn_step < 2:
                 if click_coords in white_coords:
-                    print(f"Click Coordinates: {click_coords}")
+                    print({click_coords})
                     selected = white_coords.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
                 if click_coords in legal_moves and selected != 100:
-                    print(f"Click Coordinates: {click_coords}")
+                    print({click_coords})
                     white_coords[selected] = click_coords
                     if click_coords in black_coords:
                         black_piece = black_coords.index(click_coords)
