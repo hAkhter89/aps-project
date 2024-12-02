@@ -5,9 +5,7 @@ screen_width=800
 screen_height=800
 
 screen = pygame.display.set_mode([screen_width,screen_height])
-pygame.display.set_caption('Chess.py')
-font = pygame.font.Font('freesansbold.ttf', 20) 
-big_font = pygame.font.Font('freesansbold.ttf', 50)
+pygame.display.set_caption('v0.9.5 - 2 player chess (Ayaan, Hassan, Mustafeez)')
 timer = pygame.time.Clock()
 fps = 60
 
@@ -59,6 +57,8 @@ piece_list = ['pawn', 'queen', 'king', 'knight', 'bishop', 'rook']
 
                 
 #check variables
+white_can_castle = True
+black_can_castle = True
 
 
 #board color
@@ -67,7 +67,11 @@ light_brown = (1,1,1)
 brown = (1,1,1)
 
 
-#drawing the main board
+#Flashing Counter:
+
+counter = 0
+
+
 
 def draw_board():
     screen.blit(board_png,(0,0))
@@ -544,9 +548,53 @@ def check_king(position, color):
             moves_list.append((position[0] - 1, position[1]))
         if (position[0] + 1, position[1]) not in black_coords:
             moves_list.append((position[0] + 1, position[1]))
+    # KINGSIDE CASTLE O-O    
+    if color == 'white' and white_can_castle == True:
+        castle_flag = False
+        for x in range(1, 3):
+            if (position[0] - x, position[1]) not in white_coords and (position[0] - x, position[1]) not in black_coords:
+                castle_flag = True
+            else: 
+                castle_flag = False
+                break
+        if castle_flag == True:
+            moves_list.append((position[0] - 2, position[1]))
+    elif color == 'black' and black_can_castle == True:
+        castle_flag = False
+        for x in range(1, 3):
+            if (position[0] - x, position[1]) not in white_coords and (position[0] - x, position[1]) not in black_coords:
+                castle_flag = True
+            else: 
+                castle_flag = False
+                break
+        if castle_flag == True:
+            moves_list.append((position[0] - 2, position[1]))
+    # QUEENSIDE CASTLE O-O-O
+    if color == 'white' and white_can_castle == True:
+        castle_flag = False
+        for x in range(1, 4):
+            if (position[0] + x, position[1]) not in white_coords and (position[0] + x, position[1]) not in black_coords:
+                castle_flag = True
+            else: 
+                castle_flag = False
+                break
+        if castle_flag == True:
+            moves_list.append((position[0] + 2, position[1]))
+    elif color == 'black' and black_can_castle == True:
+        castle_flag = False
+        for x in range(1, 4):
+            if (position[0] + x, position[1]) not in white_coords and (position[0] + x, position[1]) not in black_coords:
+                castle_flag = True
+            else: 
+                castle_flag = False
+                break
+        if castle_flag == True:
+            moves_list.append((position[0] + 2, position[1]))
+                
     return moves_list
 
-                 
+        
+               
     
 
 def check_valid_moves():
@@ -556,6 +604,29 @@ def check_valid_moves():
         options_list = black_options
     valid_options = options_list[selected]
     return valid_options
+
+
+#flashing square around king if king in check, if king is capture==checkmate and game over:
+
+def draw_check():
+    if turn_step<2: #this means it is the white player's turn
+        king_index= white_pieces.index("king")
+        king_location=white_coords[king_index]
+        for i in range (len(black_options)):
+            if king_location in black_options[i]:
+                if counter<15: #so that the rectangle flashes every half second
+                    pygame.draw.rect(screen,'dark red', [white_coords[king_index][0]*100+1, white_coords[king_index][1]*100+1,100,100],5)
+
+    else: #this means it is the black player's turn
+        king_index= black_pieces.index("king")
+        king_location=black_coords[king_index]
+        for i in range (len(white_options)):
+            if king_location in white_options[i]:
+                if counter<15: #so that the rectangle flashes every half second
+                    pygame.draw.rect(screen,'dark blue', [black_coords[king_index][0]*100+1,black_coords[king_index][1]*100+1,100,100],5)
+
+
+
 
 
 #gameloop
@@ -569,9 +640,22 @@ while run == True:
 
 
     timer.tick(fps)
-    screen.fill(light_brown)
+
+    if counter<30:
+        counter+=1
+    else:
+        counter=0
     draw_board()
     draw_pieces()
+    
+    if 'king' not in white_pieces:
+        print('Checkmate, Black Wins')
+        run = False
+    elif 'king' not in black_pieces:
+        print('Checkamte, White wins')
+        run = False
+    else:
+        draw_check()
     
     if selected != 100:
         legal_moves = check_valid_moves()
@@ -590,6 +674,13 @@ while run == True:
                     selected = white_coords.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
+                if selected == 3:
+                    if click_coords == (1, 7) and click_coords in legal_moves and white_can_castle == True:
+                        white_coords[0] = (2,7)
+                        white_can_castle = False
+                    elif click_coords == (5,7) and click_coords in legal_moves and white_can_castle == True:
+                        white_coords[7] = (4,7)
+                        white_can_castle = False
                 if click_coords in legal_moves and selected != 100:
                     print({click_coords})
                     white_coords[selected] = click_coords
@@ -608,6 +699,13 @@ while run == True:
                     selected = black_coords.index(click_coords)
                     if turn_step == 2:
                         turn_step = 3
+                if selected == 3:
+                    if click_coords == (1, 0) and click_coords in legal_moves and black_can_castle == True:
+                        black_coords[0] = (2,0)
+                        black_can_castle = False
+                    elif click_coords == (5, 0) and click_coords in legal_moves and black_can_castle == True:
+                        black_coords[7] = (4, 0)
+                        black_can_castle = False
                 if click_coords in legal_moves and selected != 100:
                     black_coords[selected] = click_coords
                     if click_coords in white_coords:
