@@ -670,11 +670,11 @@ while run == True:
             
             if turn_step < 2:
                 if click_coords in white_coords:
-                    print({click_coords})
+                    print(f' White Turn - {click_coords}')
                     selected = white_coords.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
-                if selected == 3:
+                if selected != 100 and white_pieces[selected] == 'king':
                     if click_coords == (1, 7) and click_coords in legal_moves and white_can_castle == True:
                         white_coords[0] = (2,7)
                         white_can_castle = False
@@ -696,10 +696,11 @@ while run == True:
                     legal_moves = []
             if turn_step > 1:
                 if click_coords in black_coords:
+                    print(f' Black Turn - {click_coords}')
                     selected = black_coords.index(click_coords)
                     if turn_step == 2:
                         turn_step = 3
-                if selected == 3:
+                if selected != 100  and black_pieces[selected] == 'king':
                     if click_coords == (1, 0) and click_coords in legal_moves and black_can_castle == True:
                         black_coords[0] = (2,0)
                         black_can_castle = False
