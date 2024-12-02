@@ -5,7 +5,7 @@ screen_width=800
 screen_height=800
 
 screen = pygame.display.set_mode([screen_width,screen_height])
-pygame.display.set_caption('Chess.py')
+pygame.display.set_caption('v0.9.1')
 font = pygame.font.Font('freesansbold.ttf', 20) 
 big_font = pygame.font.Font('freesansbold.ttf', 50)
 timer = pygame.time.Clock()
