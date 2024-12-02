@@ -670,7 +670,6 @@ while run == True:
             
             if turn_step < 2:
                 if click_coords in white_coords:
-                    print(f'White Turn - {click_coords}')
                     selected = white_coords.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
@@ -679,11 +678,13 @@ while run == True:
                         white_coords[0] = (2,7)
                         white_can_castle = False
                     elif click_coords == (5,7) and click_coords in legal_moves and white_can_castle == True:
-                        white_coords[7] = (4,7)
-                        white_can_castle = False
+                        for x in range(1, len(white_pieces[1:])):
+                            if white_pieces[x] == 'rook':
+                                white_coords[x] = (4,7)
+                                white_can_castle = False
                 if click_coords in legal_moves and selected != 100:
                     white_coords[selected] = click_coords
-                    print(f'White plays {click_coords}', end=' : ')
+                    print(f'White plays {click_coords}')
                     if click_coords in black_coords:
                         black_piece = black_coords.index(click_coords)
                         capture_black.append(black_pieces[black_piece])
@@ -704,8 +705,10 @@ while run == True:
                         black_coords[0] = (2,0)
                         black_can_castle = False
                     elif click_coords == (5, 0) and click_coords in legal_moves and black_can_castle == True:
-                        black_coords[7] = (4, 0)
-                        black_can_castle = False
+                        for x in range(1, len(black_pieces[1:])):
+                            if black_pieces[x] == 'rook':
+                                black_coords[x] = (4, 0)
+                                black_can_castle = False
                 if click_coords in legal_moves and selected != 100:
                     print(f'Black plays {click_coords}')
                     black_coords[selected] = click_coords
