@@ -63,8 +63,8 @@ black_can_castle = True
 
 #board color
 board_png = pygame.transform.scale(pygame.image.load('alpha/chessboard.png'), (800,800))
-light_brown = (240,219,182)
-green = (111,130,56)
+light_brown = (1,1,1)
+brown = (1,1,1)
 
 
 #Flashing Counter:
