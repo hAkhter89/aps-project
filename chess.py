@@ -67,7 +67,11 @@ light_brown = (240,219,182)
 green = (111,130,56)
 
 
-#drawing the main board
+#Flashing Counter:
+
+counter = 0
+
+
 
 def draw_board():
     screen.blit(board_png,(0,0))
@@ -558,6 +562,31 @@ def check_valid_moves():
     return valid_options
 
 
+#flashing square around king if king in check, if king is capture==checkmate and game over:
+
+def draw_check():
+    if turn_step<2: #this means it is the white player's turn
+        king_index= white_pieces.index("king")
+        king_location=white_coords[king_index]
+        for i in range (len(black_options)):
+            if king_location in black_options[i]:
+                if counter<15: #so that the rectangle flashes every half second
+                    pygame.draw.rect(screen,'dark red', [white_coords[king_index][0]*100+1, white_coords[king_index][1]*100+1,100,100],5)
+
+
+    else: #this means it is the black player's turn
+        king_index= black_pieces.index("king")
+        king_location=black_coords[king_index]
+        for i in range (len(white_options)):
+            if king_location in white_options[i]:
+                if counter<15: #so that the rectangle flashes every half second
+                    pygame.draw.rect(screen,'dark blue', [black_coords[king_index][0]*100+1,black_coords[king_index][1]*100+1,100,100],5)
+
+
+
+
+
+
 #gameloop
 
 
@@ -569,9 +598,16 @@ while run == True:
 
 
     timer.tick(fps)
+
+    if counter<30:
+        counter+=1
+    else:
+        counter=0
+
     screen.fill(light_brown)
     draw_board()
     draw_pieces()
+    draw_check()
     
     if selected != 100:
         legal_moves = check_valid_moves()
