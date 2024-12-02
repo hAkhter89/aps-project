@@ -652,7 +652,7 @@ while run == True:
         print('Checkmate, Black Wins')
         run = False
     elif 'king' not in black_pieces:
-        print('Checkamte, White wins')
+        print('Checkmate, White wins')
         run = False
     else:
         draw_check()
@@ -670,7 +670,7 @@ while run == True:
             
             if turn_step < 2:
                 if click_coords in white_coords:
-                    print(f' White Turn - {click_coords}')
+                    print(f'White Turn - {click_coords}')
                     selected = white_coords.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
@@ -682,8 +682,8 @@ while run == True:
                         white_coords[7] = (4,7)
                         white_can_castle = False
                 if click_coords in legal_moves and selected != 100:
-                    print({click_coords})
                     white_coords[selected] = click_coords
+                    print(f'White plays {click_coords}', end=' : ')
                     if click_coords in black_coords:
                         black_piece = black_coords.index(click_coords)
                         capture_black.append(black_pieces[black_piece])
@@ -696,7 +696,6 @@ while run == True:
                     legal_moves = []
             if turn_step > 1:
                 if click_coords in black_coords:
-                    print(f' Black Turn - {click_coords}')
                     selected = black_coords.index(click_coords)
                     if turn_step == 2:
                         turn_step = 3
@@ -708,6 +707,7 @@ while run == True:
                         black_coords[7] = (4, 0)
                         black_can_castle = False
                 if click_coords in legal_moves and selected != 100:
+                    print(f'Black plays {click_coords}')
                     black_coords[selected] = click_coords
                     if click_coords in white_coords:
                         white_piece = white_coords.index(click_coords)
