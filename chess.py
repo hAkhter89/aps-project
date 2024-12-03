@@ -117,23 +117,27 @@ def check_options(pieces, locations, turn):
 def check_pawn(position, color):
     moves_list = []
     if color == 'white':
+        # checks if y coordinate - 1 (up the board) is occupied by either white piece of black piece, if not its a valid move
         if (position[0], position[1] - 1) not in white_coords and \
                 (position[0], position[1] - 1) not in black_coords and position[1] > 0:
             moves_list.append((position[0], position[1] - 1))
         if (position[0], position[1] - 2) not in white_coords and \
                 (position[0], position[1] - 2) not in black_coords and position[1] == 6:
             moves_list.append((position[0], position[1] - 2))
+    # Checks if theres a an opposing piece to the diagnol of current square. if so, its a valid move
         if (position[0] + 1, position[1] - 1) in black_coords:
             moves_list.append((position[0] + 1, position[1] - 1))
         if (position[0] - 1, position[1] - 1) in black_coords:
             moves_list.append((position[0] - 1, position[1] - 1))
     else:
+        # checks if y coordinate + 1 (down the board) is occupied by either white piece of black piece, if not its a valid move
         if (position[0], position[1] + 1) not in white_coords and \
                 (position[0], position[1] + 1) not in black_coords and position[1] < 7:
             moves_list.append((position[0], position[1] + 1))
         if (position[0], position[1] + 2) not in white_coords and \
                 (position[0], position[1] + 2) not in black_coords and position[1] == 1:
             moves_list.append((position[0], position[1] + 2))
+    # Checks if theeres an opposing peice to the diagnol of the curretn square, if so its a valid move
         if (position[0] + 1, position[1] + 1) in white_coords:
             moves_list.append((position[0] + 1, position[1] + 1))
         if (position[0] - 1, position[1] + 1) in white_coords:
@@ -144,7 +148,7 @@ def check_rook(position, color):
     moves_list = []
     flag = True
     if color == 'white':
-        # UP
+        # UP Loops to check if each square is not occupied by a piece, if it is the loop breaks and the valid moves are appended as the rook cannot see through pieces
         for x in range(1, position[1] + 1):
             if (position[0], position[1] - x) not in white_coords:
                 if (position[0], position[1] - x) in black_coords:
@@ -154,7 +158,7 @@ def check_rook(position, color):
                     moves_list.append((position[0], position[1] - x))
             else:
                 break
-        # DOWN
+        # DOWN Loops to check if each square is not occupied by a piece if it is the loops are broken, and valid moves uptill that point are appended to moveslist
         for x in range(1, abs(position[1] - 7) + 1):
             if (position[0], position[1] + x) not in white_coords:
                 if (position[0], position[1] + x) in black_coords:
@@ -164,7 +168,7 @@ def check_rook(position, color):
                     moves_list.append((position[0], position[1] + x))
             else:
                 break
-        # LEFT
+        # LEFT ///
         for x in range(1, position[0] + 1):
             if (position[0] - x, position[1]) not in white_coords:
                 if (position[0] - x, position[1]) in black_coords:
@@ -174,7 +178,7 @@ def check_rook(position, color):
                     moves_list.append((position[0] - x, position[1]))
             else:
                 break
-        # RIGHT
+        # RIGHT ////
         for x in range(1, abs(position[0] - 7) + 1):
             if (position[0] + x, position[1]) not in white_coords:
                 if (position[0] + x, position[1]) in black_coords:
@@ -667,35 +671,47 @@ while run == True:
             x_coord = event.pos[0] // 100
             y_coord = event.pos[1] // 100   
             click_coords = (x_coord, y_coord)
+            print(click_coords)
             
             if turn_step < 2:
+                # WHITE'S TURN
                 if click_coords in white_coords:
-                    selected = white_coords.index(click_coords)
-                    if turn_step == 0:
+                    # Selected index in the white coords list
+                    selected = white_coords.index(click_coords) 
+                    if turn_step == 0: 
+                        # step = 1 means that a white piece is selected, and thus after a reloop it detects the move-click
                         turn_step = 1
                 if selected != 100 and white_pieces[selected] == 'king':
+                    # Logic for Castles
                     if click_coords == (1, 7) and click_coords in legal_moves and white_can_castle == True:
                         white_coords[0] = (2,7)
                         white_can_castle = False
+                    # Logic for Queenside castles
                     elif click_coords == (5,7) and click_coords in legal_moves and white_can_castle == True:
                         for x in range(1, len(white_pieces[1:])):
                             if white_pieces[x] == 'rook':
                                 white_coords[x] = (4,7)
                                 white_can_castle = False
+                #  At turn = 1 i.e white piece selected, if new click in legal moves then play that move
                 if click_coords in legal_moves and selected != 100:
                     white_coords[selected] = click_coords
                     print(f'White plays {click_coords}')
                     if click_coords in black_coords:
+                        # if legal move square occupied by opposing peice, means that piece has now been captured therefore remove its entry and coords
                         black_piece = black_coords.index(click_coords)
                         capture_black.append(black_pieces[black_piece])
                         black_pieces.pop(black_piece)
                         black_coords.pop(black_piece)
+                    #  recalculate new moves_list from after capture of pieces
                     black_options = check_options(black_pieces, black_coords, 'black')
                     white_options = check_options(white_pieces, white_coords, 'white')
                     turn_step = 2
+                    # Turn step 2 = switch turn to black turn after white has played a move and reset selction and legal_moves
                     selected = 100
+                    # legal moves are re-calculated every turn
                     legal_moves = []
             if turn_step > 1:
+                # Black TURN // same as white turn but replaced all values of white references with black references
                 if click_coords in black_coords:
                     selected = black_coords.index(click_coords)
                     if turn_step == 2:
