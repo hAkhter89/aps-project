@@ -5,7 +5,7 @@ screen_width=800
 screen_height=800
 
 screen = pygame.display.set_mode([screen_width,screen_height])
-pygame.display.set_caption('v0.9.5 - 2 player chess (Ayaan, Hassan, Mustafeez)')
+pygame.display.set_caption('v0.9.9 - 2 player chess (Ayaan, Hassan, Mustafeez)')
 timer = pygame.time.Clock()
 fps = 60
 
@@ -92,7 +92,7 @@ def draw_pieces():
             screen.blit(white_imgs[imgindex], (white_coords[i][0] * 100 + 8, white_coords[i][1] * 100 + 18))    
     
             
-        # functions to check all pices valid option
+# functions to check all pices valid option, this returns a NESTED LIST of all valid moves(tuples) in a turn, later the piecewise valid moves can be indexed by doing all_moves_list[selected]
 def check_options(pieces, locations, turn):
     moves_list = []
     all_moves_list = []
@@ -234,6 +234,7 @@ def check_rook(position, color):
 def check_knight(position, color):
     moves_list = []
     if color == 'white':
+    # The knight moves in an L shape, i.e 2 square in the y coordinate and 1 in the x coordinate. Total 8 possible moves sometimes the combination will also be 2 square in the x coordinate and 1 in the y coordinate, same for black.
         if (position[0] + 1, position[1] - 2) not in white_coords:
             moves_list.append((position[0] + 1, position[1] - 2))
         if (position[0] - 1, position[1] - 2) not in white_coords:
@@ -279,7 +280,10 @@ def check_knight(position, color):
 
 def check_bishop(position, color):
     moves_list = []
+    # if the current x sqare is 5 then the moves to the left will be x in range(1, 5 + 1) and moves to the right of the 5 squares will also need to be considered separetly, i.e x in range(1, abs(5-7(7 is the total board lenght) + 1))
+    # all the moves are made diaganoly hence x coordinate + 1, y coordinate - 1 and these combinations, this will also be done for diagnol moves in the other 2 directions i.e top down, so if y coord is 5, x in range(1, 5 + 1)..., we're not concernced with their being more moves then squares becuase the board is lociked at 800x800
     if color == 'white':
+        # TOP LEFT
         for x in range(1, position[0] + 1):
             if (position[0] - x, position[1] - x) not in white_coords:
                 if (position[0] - x, position[1] - x) in black_coords:
@@ -289,6 +293,7 @@ def check_bishop(position, color):
                     moves_list.append((position[0] - x, position[1] - x))
             else:
                 break
+        # DOWN RIGHT
         for x in range(1, abs(position[0] - 7) + 1):
             if (position[0] + x, position[1] + x) not in white_coords:
                 if (position[0] + x, position[1] + x) in black_coords:
@@ -298,6 +303,7 @@ def check_bishop(position, color):
                     moves_list.append((position[0] + x, position[1] + x))
             else:
                 break
+        # DOWN LEFT
         for x in range(1, position[0] + 1):
             if (position[0] - x, position[1] + x) not in white_coords:
                 if (position[0] - x, position[1] + x) in black_coords:
@@ -307,6 +313,7 @@ def check_bishop(position, color):
                     moves_list.append((position[0] - x, position[1] + x))
             else:
                 break
+        #  UP RIGHT
         for x in range(1, abs(position[0] - 7) + 1):
             if (position[0] + x, position[1] - x) not in white_coords:
                 if (position[0] + x, position[1] - x) in black_coords:
@@ -317,6 +324,7 @@ def check_bishop(position, color):
             else:
                 break
     else:
+        # FOR BLACK
         for x in range(1, abs(position[0] - 7) + 1):
             if (position[0] + x, position[1] + x) not in black_coords:
                 if (position[0] + x, position[1] + x) in white_coords:
@@ -517,6 +525,7 @@ def check_queen(position, color):
     return moves_list
 
 def check_king(position, color):
+    # 1 square in all directions
     moves_list = []
     if color == 'white':
         if (position[0], position[1] - 1) not in white_coords:
@@ -552,6 +561,7 @@ def check_king(position, color):
             moves_list.append((position[0] - 1, position[1]))
         if (position[0] + 1, position[1]) not in black_coords:
             moves_list.append((position[0] + 1, position[1]))
+    # the special castling move in Kingside(O-O) and Queenside(O-O-O) directions
     # KINGSIDE CASTLE O-O    
     if color == 'white' and white_can_castle == True:
         castle_flag = False
@@ -671,7 +681,6 @@ while run == True:
             x_coord = event.pos[0] // 100
             y_coord = event.pos[1] // 100   
             click_coords = (x_coord, y_coord)
-            print(click_coords)
             
             if turn_step < 2:
                 # WHITE'S TURN
